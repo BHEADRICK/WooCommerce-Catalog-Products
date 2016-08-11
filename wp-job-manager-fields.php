@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: My Plugin Name
+Plugin Name: WP Job Manager Fields
 Plugin URI:
 Description:
 Version: 1.0.0
@@ -17,36 +17,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class PluginName {
+class WPJobManagerFields {
 
 	/*--------------------------------------------*
 	 * Constants
 	 *--------------------------------------------*/
-	const name = 'My Plugin Name';
-	const slug = 'plugin-name';
+	const name = 'WP Job Manager Fields';
+	const slug = 'wp-job-manager-fields';
 
 	/**
 	 * Constructor
 	 */
 	function __construct() {
 		//register an activation hook for the plugin
-		register_activation_hook( __FILE__, array( $this, 'install_plugin_name' ) );
+		register_activation_hook( __FILE__, array( $this, 'install_wp_job_manager_fields' ) );
 
 		//Hook up to the init action
-		add_action( 'init', array( $this, 'init_plugin_name' ) );
+		add_action( 'init', array( $this, 'init_wp_job_manager_fields' ) );
 	}
 
 	/**
 	 * Runs when the plugin is activated
 	 */
-	function install_plugin_name() {
+	function install_wp_job_manager_fields() {
 		// do not generate any output here
 	}
 
 	/**
 	 * Runs when the plugin is initialized
 	 */
-	function init_plugin_name() {
+	function init_wp_job_manager_fields() {
 		// Setup localization
 		load_plugin_textdomain( self::slug, false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 		// Load JavaScript and stylesheets
@@ -127,4 +127,4 @@ class PluginName {
 	} // end load_file
 
 } // end class
-new PluginName();
+new WPJobManagerFields();
