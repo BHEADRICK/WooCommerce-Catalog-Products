@@ -1,7 +1,7 @@
 WooCommerce Catalog Products
 ==========================
 
-This adds a widget area on each product edit page to allow you to prevent it from being added to the cart (remove add to cart button) without having to leave the price field empty.
+This adds a meta box on each product edit page to allow you to prevent it from being added to the cart (remove add to cart button) without having to leave the price field empty.
 
 ##Requirements
 

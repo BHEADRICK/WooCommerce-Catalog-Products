@@ -2,7 +2,7 @@
 /*
 Plugin Name: WooCommerce Catalog Product
 Plugin URI: https://github.com/BHEADRICK/WooCommerce-Catalog-Products
-Description: This adds a widget area on each product edit page to allow you to prevent it from being added to the cart (remove add to cart button) without having to leave the price field empty.
+Description: This adds a meta box on each product edit page to allow you to prevent it from being added to the cart (remove add to cart button) without having to leave the price field empty.
 Version: 1.0.0
 Author: Catman Studios
 Author URI: https://catmanstudios.com
@@ -25,7 +25,7 @@ class WooCommerceCatalogProduct {
 	 *--------------------------------------------*/
 	const name = 'WooCommerce Catalog Product';
 	const slug = 'woocommerce-catalog-product';
-
+    var $availability_html;
 	/**
 	 * Constructor
 	 */
@@ -51,10 +51,12 @@ class WooCommerceCatalogProduct {
 		// Setup localization
 		load_plugin_textdomain( self::slug, false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 		// Load JavaScript and stylesheets
-		$this->register_scripts_and_styles();
+		//$this->register_scripts_and_styles();
 
 		// Register the shortcode [my_shortcode]
-		add_shortcode( 'my_shortcode', array( $this, 'render_shortcode' ) );
+		//
+        //
+        //add_shortcode( 'my_shortcode', array( $this, 'render_shortcode' ) );
 
 		if ( is_admin() ) {
 			//this will run when in the WordPress admin
@@ -68,17 +70,86 @@ class WooCommerceCatalogProduct {
 		 * For more information:
 		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_action( 'your_action_here', array( $this, 'action_callback_method_name' ) );
-		add_filter( 'your_filter_here', array( $this, 'filter_callback_method_name' ) );
-	}
 
-	function action_callback_method_name() {
-		// TODO define your action method here
-	}
+		$this->availability_html = 'Only available in <a href="/steel-pool-kits/">Steel Pool Kits</a> and <a href="/polymer-pool-kits/">Polymer Pool Kits</a>';
 
-	function filter_callback_method_name() {
-		// TODO define your filter method here
-	}
+        add_action( 'add_meta_boxes', array( $this,'catalog_only_add_meta_box') );
+        add_action( 'save_post', array( $this,'catalog_only_save') );
+        add_filter('woocommerce_get_availability', array($this, 'product_availability'), 10, 2);
+        add_filter('woocommerce_available_variation', array($this, 'variation_availability'), 10, 3);
+    }
+function variation_availability($props, $variation, $variable){
+
+    error_log(print_r($props, true));
+    $catalog_only = get_post_meta($variation->id, '_catalog_only', true);
+
+
+    if($catalog_only){
+        $props['is_purchasable'] = false;
+
+    }
+
+    return $props;
+}
+    function product_availability($props,  $product){
+
+      //  error_log(print_r($product, true));
+
+        $catalog_only = get_post_meta($product->id, '_catalog_only', true);
+
+
+        if($catalog_only){
+            $props['availability']=$this->availability_html;
+            $props['class']='out-of-stock';
+        }
+
+        return $props;
+
+    }
+
+    function catalog_only_get_meta( $value ) {
+        global $post;
+
+        $field = get_post_meta( $post->ID, $value, true );
+        if ( ! empty( $field ) ) {
+            return is_array( $field ) ? stripslashes_deep( $field ) : stripslashes( wp_kses_decode_entities( $field ) );
+        } else {
+            return false;
+        }
+    }
+
+    function catalog_only_add_meta_box() {
+
+        add_meta_box(
+            'catalog_only-catalog-only',
+            __( 'Catalog Only', 'catalog_only' ),
+            array($this, 'catalog_only_html'),
+            'product',
+            'side',
+            'high'
+        );
+    }
+    function catalog_only_html( $post) {
+        wp_nonce_field( '_catalog_only_nonce', 'catalog_only_nonce' ); ?>
+
+        <p>Prevent this product from being added to cart</p>
+
+        <p>
+
+        <input type="checkbox" name="_catalog_only" id="_catalog_only" value="catalog-only" <?php echo ( $this->catalog_only_get_meta( '_catalog_only' ) === 'catalog-only' ) ? 'checked' : ''; ?>>
+        <label for="_catalog_only"><?php _e( 'Catalog Only', 'catalog_only' ); ?></label>	</p><?php
+    }
+
+    function catalog_only_save( $post_id ) {
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+        if ( ! isset( $_POST['catalog_only_nonce'] ) || ! wp_verify_nonce( $_POST['catalog_only_nonce'], '_catalog_only_nonce' ) ) return;
+        if ( ! current_user_can( 'edit_post', $post_id ) ) return;
+
+        if ( isset( $_POST['_catalog_only'] ) )
+            update_post_meta( $post_id, '_catalog_only', esc_attr( $_POST['_catalog_only'] ) );
+        else
+            update_post_meta( $post_id, '_catalog_only', null );
+    }
 
 	function render_shortcode($atts) {
 		// Extract the attributes

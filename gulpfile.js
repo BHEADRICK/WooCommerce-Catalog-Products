@@ -5,11 +5,7 @@ gulp.task('deploy', function () {
 
   var zip = require('gulp-zip');
   var findParentDir = require('find-parent-dir');
-  var config = {
-      accessKeyId: "ACCESSKEY",
-      secretAccessKey: "secretAccessKey"
-  }
-   var s3 = require('gulp-s3-upload')(config);
+
   var dir;
   try {
 
@@ -22,12 +18,7 @@ gulp.task('deploy', function () {
   }
   return gulp.src([ '**' ,'!.*', '!composer.json', '!package.json', '!gulpfile.js', '!node_modules/**' ])
     .pipe(zip(dir+'.zip'))
-    .pipe(gulp.dest('../')).pipe(s3({
-            Bucket: 'bucket-name', //  Required
-        }, {
-            // S3 Construcor Options, ie:
-            maxRetries: 5
-        }));
+    .pipe(gulp.dest('../'));
 });
 
 gulp.task('rename', function(){
