@@ -1,35 +1,15 @@
-Plugin Boilerplate
+WooCommerce Catalog Products
 ==========================
 
-This is a basic scaffold for a new WordPress plugin based on the generator found
-at http://wppb.me/
-
-There is also a gulp action to zip the build files (excluding the dev files), name the zip file as the enclosing folder name, and upload it to an S3 bucket
+This adds a widget area on each product edit page to allow you to prevent it from being added to the cart (remove add to cart button) without having to leave the price field empty.
 
 ##Requirements
 
-npm and gulp should be installed globally
+WooCommerce
 
 ##Installation
 
-After unzipping or cloning, run the following in Terminal (Mac/Linux) or gitbash (Windows):
+1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
+1. Activate the plugin through the 'Plugins' screen in WordPress
+1. Use the Settings->Plugin Name screen to configure the plugin
 
-npm update
-
-Then you can run the following to name the plugin:
-
-gulp rename --name="Name of the Plugin"
-
-To also rename the containing folder, you'll also need to run:
-
-gulp move --name="Name of the Plugin"
-
-##Deploy
-
-To zip up the plugin and upload it to an S3 bucket:
-
-Update the gulpfile with your s3 creds and bucket name, and then run:
-
-gulp deploy
-
-(The zipped file will be located in the plugins directory)

@@ -1,11 +1,12 @@
 <?php
 /*
 Plugin Name: WooCommerce Catalog Product
-Plugin URI:
-Description:
+Plugin URI: https://github.com/BHEADRICK/WooCommerce-Catalog-Products
+Description: This adds a widget area on each product edit page to allow you to prevent it from being added to the cart (remove add to cart button) without having to leave the price field empty.
 Version: 1.0.0
-Author: Author Name
-Author URI: https://authorurl.com
+Author: Catman Studios
+Author URI: https://catmanstudios.com
+Tested up to: 4.5.3
  License: GNU General Public License v3.0
  License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
